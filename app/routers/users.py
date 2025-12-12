@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from pydantic import BaseModel, EmailStr
 
-from ..models.user import User1
+from ..models.user import ZTBL_User
 from ..core.security import get_current_user
 from ..database.db import get_session
 from ..core.security import get_password_hash
@@ -32,7 +32,7 @@ class UserOut(BaseModel):
 
 
 @router.get("/me", response_model=UserOut)
-def read_me(current_user: User1 = Depends(get_current_user)):
+def read_me(current_user: ZTBL_User = Depends(get_current_user)):
     return current_user
 
 
@@ -40,7 +40,7 @@ def read_me(current_user: User1 = Depends(get_current_user)):
 def signup(user_in: UserCreate, session: Session = Depends(get_session)):
     # check if email already exists
     existing = session.exec(
-        select(User1).where(User1.email == user_in.email)
+        select(ZTBL_User).where(ZTBL_User.email == user_in.email)
     ).first()
     if existing:
         raise HTTPException(
@@ -48,7 +48,7 @@ def signup(user_in: UserCreate, session: Session = Depends(get_session)):
             detail="Email already registered",
         )
 
-    db_user = User1(
+    db_user = ZTBL_User(
         email=user_in.email,
         hashed_password=get_password_hash(user_in.password),
     )

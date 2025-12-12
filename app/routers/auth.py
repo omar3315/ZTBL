@@ -18,7 +18,6 @@ def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     session: Session = Depends(get_session),
 ):
-    print("Form Data: ", form_data)
     user = authenticate_user(session, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
