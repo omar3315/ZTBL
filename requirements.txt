@@ -1,0 +1,21 @@
+# uvicorn
+# sqlalchemy
+# oracledb
+# python-dotenv
+# fastapi
+
+# sqlmodel
+# pyjwt[crypto] 
+# pwdlib[argon2]
+
+fastapi
+uvicorn[standard]
+sqlmodel
+oracledb
+psycopg2-binary
+pyjwt[crypto]
+pwdlib[argon2]
+pydantic-settings
+python-multipart
+python-jose[cryptography]
+pydantic[email]
