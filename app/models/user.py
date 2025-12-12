@@ -1,7 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel, Field
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, text
-from sqlalchemy.dialects.oracle import RAW
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, text, Identity
 from datetime import datetime
 
 class ZTBL_User(SQLModel, table=True):
@@ -9,14 +8,14 @@ class ZTBL_User(SQLModel, table=True):
 
     id: Optional[int] = Field(
         default=None,
-        sa_column=Column(Integer, primary_key=True, autoincrement=True)
+        sa_column=Column(
+            Integer,
+            Identity(start=1, increment=1),  # REQUIRED for Oracle
+            primary_key=True,
+        ),
     )
     email: str = Field(
         sa_column=Column(String(255), nullable=False, unique=True, index=True)
-    )
-
-    hashed_password: str = Field(
-        sa_column=Column(String(255), nullable=False)
     )
     
     is_active: bool = Field(
@@ -33,3 +32,6 @@ class ZTBL_User(SQLModel, table=True):
         )
     )
     
+    hashed_password: str = Field(
+        sa_column=Column(String(255), nullable=False)
+    )
