@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session, select
 
 from .config import settings
-from ..models.user import User
+from ..models.user import User1
 from ..database.db import get_session
 
 password_hash = PasswordHash.recommended()
@@ -28,8 +28,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-def authenticate_user(session: Session, email: str, password: str) -> Optional[User]:
-    user = session.exec(select(User).where(User.email == email)).first()
+def authenticate_user(session: Session, email: str, password: str) -> Optional[User1]:
+    user = session.exec(select(User1).where(User1.email == email)).first()
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
@@ -37,7 +37,7 @@ def authenticate_user(session: Session, email: str, password: str) -> Optional[U
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     session: Session = Depends(get_session),
-) -> User:
+) -> User1:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -49,7 +49,7 @@ async def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = session.exec(select(User).where(User.email == email)).first()
+    user = session.exec(select(User1).where(User1.email == email)).first()
     if user is None:
         raise credentials_exception
     return user
