@@ -9,7 +9,7 @@ class ZTBL_User(SQLModel, table=True):
         default=None,
         sa_column=Column(
             Integer,
-            Identity(start=1, increment=1),  # Oracle identity
+            Identity(start=1, increment=1),
             primary_key=True,
         ),
     )

@@ -19,3 +19,4 @@ pydantic-settings
 python-multipart
 python-jose[cryptography]
 pydantic[email]
+pyotp

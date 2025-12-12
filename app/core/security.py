@@ -6,6 +6,7 @@ from pwdlib import PasswordHash
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session, select
+import pyotp
 
 from .config import settings
 from ..models.user import ZTBL_User
@@ -30,9 +31,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 def authenticate_user(session: Session, email: str, password: str) -> Optional[ZTBL_User]:
     user = session.exec(select(ZTBL_User).where(ZTBL_User.email == email.strip())).first()
-    print("SESSION", session)
-    print("EMAIL: ", email)
-    print("USER", user)
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
@@ -56,3 +54,7 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+def verify_otp(pin_code):
+    totp = pyotp.TOTP(settings.MFA_SECRET)
+    return totp.verify(pin_code)
