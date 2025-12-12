@@ -22,16 +22,16 @@ def login(
     user = authenticate_user(session, form_data.username, form_data.password)
     is_valid_otp = verify_otp(otp)
 
-    if not is_valid_otp:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect OTP",
-        )
-
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
+        )
+
+    if not is_valid_otp:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect OTP",
         )
     access_token = create_access_token(data={"sub": user.email})
     return Token(access_token=access_token)
